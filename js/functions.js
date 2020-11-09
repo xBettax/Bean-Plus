@@ -41,24 +41,45 @@ $(document).ready(function(){
         f.preventDefault();
 
         var codMaq = $('#codMaq').val();
-        var idMaq = $('#idMaq')
-        var local = $('#local').val();        
+        var idMaq = $('#idMaq').val();
+        var local = $('#local').val();
 
         if(codMaq != "" && idMaq != "" && local != ""){
             $.ajax({
-                url:"data/moverMaq.php",
+                url:"data/addMaquina.php",
                 type: "POST",
-                data: {codMaq:codMaq,local:local}
+                data: {codMaq:codMaq,idMaq:idMaq,local:local}
             }).done(function(data){
-                alert("Maquina Agregada con exito.");
+                alert("Maquina agregada exitosamente.");
+
             });
         }else{
             alert("Existen Campos Vacios.");
         }
         
     });
-    
-    $('#search').keyup(function(){
+
+    $('#mover').click(function(h){
+        h.preventDefault();
+
+        var codigom = $('#codigom').val();
+        var localm = $('#localm').val();
+
+        if(codigom != "" && localm != ""){
+            $.ajax({
+                url:"data/moverMaq.php",
+                type: "POST",
+                data: {codigom:codigom,localm:localm}
+            }).done(function(data){
+                alert("Local Actualizado exitosamente.");    
+            });
+        }else{
+            alert("Existen Campos Vacios.");
+        }
+        
+    });
+
+     $('#search').keyup(function(){
         var cod = $('#search').val();
         if(cod != ""){
             $.ajax({

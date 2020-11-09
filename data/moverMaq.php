@@ -9,7 +9,7 @@
         $db = new DB();
         $conn = $db->Open();
         if($conn){
-            $query ="UPDATE maquinas SET fk_local= '21' where codigo = '3906'";
+            $query ="UPDATE maquinas SET fk_local= $local where codigo = $codMaq";
             $conn->query($query);
         }
         else{

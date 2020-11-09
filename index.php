@@ -5,7 +5,7 @@
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -18,58 +18,13 @@
     <script src="js/functions.js"></script>
     <script src="js/filesaver.js" type="text/javascript"></script>
     <script src="js/html2canvas.js" type="text/javascript"></script>
-    <script type="text/javascript">
-    function SelectText(element) {
-                var doc = document;
-                if (doc.body.createTextRange) {
-                    var range = document.body.createTextRange();
-                    range.moveToElementText(element);
-                    range.select();
-                } else if (window.getSelection) {
-                    var selection = window.getSelection();
-                    var range = document.createRange();
-                    range.selectNodeContents(element);
-                    selection.removeAllRanges();
-                    selection.addRange(range);
-                }
-            }
-            $("#img").click(function (e) {
-                //Make the container Div contenteditable
-                $(this).attr("contenteditable", true);
-                //Select the image
-                SelectText($(this).get(0));
-                //Execute copy Command
-                //Note: This will ONLY work directly inside a click listenner
-                document.execCommand('copy');
-                //Unselect the content
-                window.getSelection().removeAllRanges();
-                //Make the container Div uneditable again
-                $(this).removeAttr("contenteditable");
-                //Success!!
-                alert("image copied!");
-            });
-
-      $(function() { 
-          $("#crearimagen").click(function() { 
-              html2canvas($("#nuevoCorte"), {
-                  onrendered: function(canvas) {
-                      theCanvas = canvas;
-                      $("#img").append(canvas);
-                      $("#img").click();
-                      $("#crearimagen").hide();
-                  }
-              });
-          });
-      });
-    </script>
-    <title>Beanstalk Plus</title>
+    <title>Cortes Bean Plus</title>
 </head>
 <body>
     <div class="formulario">
         <div class="card">
-            
             <div class="card-header text-center">
-                <h2>Agregar Corte</h2>
+                <h2>Agregar Corte</h2>   
             </div>
             <div class="card-body">
                 <form>
@@ -86,11 +41,11 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="totalin">Total In:</label>
+                        <label for="totalin">Entrada Total:</label>
                         <input type="number" name="totalin" class="form-control" id="totalin" placeholder="Total In">
                     </div>
                     <div class="form-group">
-                        <label for="totalout">Total Out:</label>
+                        <label for="totalout">Salida Total:</label>
                         <input type="number" name="totalout" class="form-control" id="totalout" placeholder="Total Out">
                     </div>
                     <div class="form-group">
@@ -106,7 +61,7 @@
         
         <div class="card maquinas">
             <div class="card-header">
-                <h3>Maquinas</h3>
+                <h3>Buscar Maquinas</h3>
             </div>
             <div class="card-body">
                 <div class="form-group">
@@ -124,9 +79,9 @@
                 <div class="form-group">
                     <label for="codMaq">Codigo:</label>
                     <input type="codM" name="search" class="form-control" id="codMaq" placeholder="Ingrese Codigo de la Maquina">
-                    <label for="idMaq">ID Codigo:</label>
+                    <label for="idMaquina">ID Codigo:</label>
                     <input type="number" name="idMaq" class="form-control" id="idMaq" placeholder="Ingrese ID de la Maquina">
-                    <label for="LocMaq">Local: </label>
+                    <label for="LocMaq">Local:</label>
                         <select class="form-control" id="local" name="local">
                             <option disabled selected value="0">Seleccionar</option>
                             <?php
@@ -138,6 +93,39 @@
                         </select>
                     <div class="card-footer text-center">
                         <button id="agregar" value="submit" class="btn btn-primary col-sm">Agregar</button>
+                    </div>
+                </div>
+            </div>  
+        </div>
+
+        <div class="card maquinas">
+        <div class="card-header">
+                <h3>Mover Local</h3>
+            </div>
+            <div class="card-body">
+                <div class="form-group">
+                    <label for="codMaq">Codigo:</label>
+                    <select class="form-control" id="codigom" name="codigo">
+                            <option disabled selected value="0">Selecciona el codigo de la maquina</option>
+                            <?php
+                                foreach ($db->read("SELECT id, CONCAT(codigo,' - ', id_maquina) AS nombre FROM maquinas ORDER BY codigo") as $row) {
+                                    echo "<option value='".$row['id']."'>". $row['nombre'] . "</option>";
+                                }
+                                $db->Close();
+                            ?>
+                        </select>
+                    <label for="LocMaq">Local:</label>
+                        <select class="form-control" id="localm" name="local">
+                            <option disabled selected value="0">Seleccionar Local</option>
+                            <?php
+                                foreach ($db->read("SELECT * FROM locales") as $row) {
+                                    echo "<option value='".$row['fk_local']."'>". $row['nombre'] . "</option>";
+                                }
+                                $db->Close();
+                            ?>
+                        </select>
+                    <div class="card-footer text-center">
+                        <button id="mover" value="submit" class="btn btn-primary col-sm">Mover</button>
                     </div>
                 </div>
             </div>  
@@ -173,6 +161,10 @@
                         <th>Activacion</th>
                     </thead>
                     <tbody id="view">
+                        <tr>
+                            <td>
+                            </td>
+                        </tr>
                           
                     </tbody>
                   </table>
@@ -184,10 +176,9 @@
     <div class="modal-dialog modal-lg modal-dialog-centered">
       <div class="modal-content">
       
-        <!-- Modal Header -->
-        <div class="modal-header">
+       <!-- Modal Header -->
+       <div class="modal-header">
           <h4 class="modal-title">Nuevos Contadores</h4>
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
         </div>
         
         <!-- Modal body -->
